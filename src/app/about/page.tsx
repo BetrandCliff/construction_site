@@ -1,5 +1,7 @@
 import PageHero from "@/components/PageHero";
-export default function About() {
+import {getSiteSettings} from "@/lib/settings";
+export default async function About() {
+  const settings = await getSiteSettings();
   return (
     <>
       <PageHero
@@ -10,7 +12,7 @@ export default function About() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <img
             className="rounded-3xl object-cover"
-            src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85"
+            src={settings.aboutImage || "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85"}
             alt="Modern architecture"
           />
           <div>

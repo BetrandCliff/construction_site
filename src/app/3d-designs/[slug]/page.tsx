@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Maximize2, Rotate3D, ZoomIn, Move3D } from "lucide-react";
-import { projects } from "@/lib/data";
+import { getDesigns } from "@/lib/projects";
 export default async function DesignDetails({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const projects = await getDesigns();
   const p = projects.find((x) => x.slug === slug);
   if (!p) return notFound();
   return (
@@ -55,6 +56,8 @@ export default async function DesignDetails({
               understand massing, proportions, materials and spatial character
               before construction.
             </p>
+            {p.modelUrl && <a href={p.modelUrl} target="_blank" rel="noreferrer" className="btn btn-outline mt-5 w-full">Open / download the 3D model</a>}
+            {!!p.interiorImages?.length && <section className="mt-8"><h2 className="text-xl font-black">Design gallery</h2><div className="mt-4 grid grid-cols-2 gap-3">{p.interiorImages.map((image,index)=><img key={`${image}-${index}`} src={image} alt={`${p.title} gallery view ${index+1}`} className="aspect-square w-full rounded-xl object-cover"/>)}</div></section>}
             <div className="mt-7 rounded-2xl bg-[#f4f7fb] p-5">
               <p className="font-black">Interested in this design?</p>
               <p className="mt-2 text-sm text-slate-500">

@@ -1,7 +1,8 @@
 import { Plus, Eye, Pencil } from "lucide-react";
 import Link from "next/link";
-import { projects } from "@/lib/data";
-export default function AdminDesigns() {
+import { getDesigns } from "@/lib/projects";
+export default async function AdminDesigns() {
+  const projects = await getDesigns();
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -33,7 +34,6 @@ export default function AdminDesigns() {
           </article>
         ))}
       </div>
-      <p className="mt-4 text-sm text-slate-500">Design data is currently demo content. Connect Supabase and Storage to manage live models and documents.</p>
     </div>
   );
 }

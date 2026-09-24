@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageMotion from "@/components/PageMotion";
+import ToastProvider from "@/components/ToastProvider";
 export const metadata: Metadata = {
   title: "BuildVision | Construction & Architectural Design",
   description:
@@ -15,11 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body><ToastProvider>
         <Navbar />
         <main><PageMotion>{children}</PageMotion></main>
         <Footer />
-      </body>
+      </ToastProvider></body>
     </html>
   );
 }

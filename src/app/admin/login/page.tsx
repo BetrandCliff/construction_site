@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Eye,
   EyeOff,
@@ -10,9 +11,25 @@ import {
   ArrowLeft,
   Building2,
 } from "lucide-react";
+import { showToast } from "@/components/ToastProvider";
 
 export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  async function signIn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setError(""); setLoading(true);
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: form.get("email"), password: form.get("password") }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Unable to sign in");
+      showToast("Signed in successfully.");
+      router.replace("/admin"); router.refresh();
+    } catch (reason) { const message = reason instanceof Error ? reason.message : "Unable to sign in"; setError(message); showToast(message, "error"); }
+    finally { setLoading(false); }
+  }
 
   return (
     <main className="min-h-screen bg-zinc-100 flex items-center justify-center p-4">
@@ -108,7 +125,7 @@ export default function AdminLoginPage() {
             </div>
 
             {/* Form */}
-            <form className="space-y-5">
+            <form onSubmit={signIn} className="space-y-5">
 
               {/* Email */}
               <div>
@@ -127,7 +144,9 @@ export default function AdminLoginPage() {
 
                   <input
                     id="email"
+                    name="email"
                     type="email"
+                    required
                     placeholder="admin@example.com"
                     className="w-full h-13 pl-11 pr-4 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10"
                   />
@@ -160,7 +179,9 @@ export default function AdminLoginPage() {
 
                   <input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
+                    required
                     placeholder="Enter your password"
                     className="w-full h-13 pl-11 pr-12 rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10"
                   />
@@ -199,10 +220,12 @@ export default function AdminLoginPage() {
               {/* Login button */}
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full h-13 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition duration-200 shadow-lg shadow-orange-500/20"
               >
-                Sign in
+                {loading ? "Signing in…" : "Sign in"}
               </button>
+              {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
             </form>
 
             {/* Back to website */}

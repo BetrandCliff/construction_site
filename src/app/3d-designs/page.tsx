@@ -1,7 +1,8 @@
 import PageHero from "@/components/PageHero";
 import Link from "next/link";
-import { projects } from "@/lib/data";
-export default function Designs() {
+import { getDesigns } from "@/lib/projects";
+export default async function Designs() {
+  const projects = await getDesigns();
   return (
     <>
       <PageHero
