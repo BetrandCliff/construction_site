@@ -3,7 +3,7 @@
 :root { --navy:#081a2c; --blue:#147ee8; --ink:#102033; --muted:#64748b; --soft:#f4f7fb; --line:#dce5ef; }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
-body { margin:0; background:#fff; color:var(--ink); font-family:Arial, Helvetica, sans-serif; }
+body { margin:0; background:#fff; color:var(--ink); font-family:Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size:16px; }
 a { text-decoration:none; }
 .container { width:min(1180px, calc(100% - 40px)); margin-inline:auto; }
 .section { padding:76px 0; }
@@ -20,3 +20,13 @@ a { text-decoration:none; }
 .input { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px 13px; outline:none; background:white; }
 .input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(20,126,232,.12); }
 .badge { display:inline-flex; border-radius:999px; padding:5px 9px; font-size:.7rem; font-weight:800; background:#e9f7ef; color:#16814a; }
+
+@keyframes page-enter { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.page-enter { animation:page-enter .35s ease-out both; }
+.scroll-reveal { opacity:0; transform:translateY(22px); transition:opacity .65s ease, transform .65s cubic-bezier(.2,.7,.2,1); }
+.scroll-reveal.is-visible { opacity:1; transform:translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+  .scroll-reveal { opacity:1; transform:none; }
+}

@@ -1,4 +1,5 @@
-import { Plus, Eye, Pencil, Trash2 } from "lucide-react";
+import { Plus, Eye, Pencil } from "lucide-react";
+import Link from "next/link";
 import { projects } from "@/lib/data";
 export default function AdminDesigns() {
   return (
@@ -8,10 +9,10 @@ export default function AdminDesigns() {
           <p className="text-sm text-slate-500">Model library</p>
           <h1 className="text-3xl font-black">3D Designs</h1>
         </div>
-        <button className="btn btn-primary">
+        <Link href="/admin/3d-designs/new" className="btn btn-primary">
           <Plus size={17} />
           Upload Design
-        </button>
+        </Link>
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {projects.slice(0, 6).map((p) => (
@@ -25,14 +26,14 @@ export default function AdminDesigns() {
               <h2 className="font-black">{p.title} Concept</h2>
               <p className="mt-1 text-xs text-slate-500">GLB • Published</p>
               <div className="mt-4 flex gap-4 text-slate-500">
-                <Eye size={17} />
-                <Pencil size={17} />
-                <Trash2 size={17} />
+                <Link aria-label={`View ${p.title}`} href={`/3d-designs/${p.slug}`}><Eye size={17} /></Link>
+                <Link aria-label={`Edit ${p.title}`} href={`/admin/3d-designs/${p.id}/edit`}><Pencil size={17} /></Link>
               </div>
             </div>
           </article>
         ))}
       </div>
+      <p className="mt-4 text-sm text-slate-500">Design data is currently demo content. Connect Supabase and Storage to manage live models and documents.</p>
     </div>
   );
 }

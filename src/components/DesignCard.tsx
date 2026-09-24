@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BedDouble, Bath, Toilet, Maximize } from "lucide-react";
-import type { Design } from "@/data/designs";
+import type { Design } from "@/lib/data";
 
 export default function DesignCard({d}:{d:Design}) {
   return <article className="card">
@@ -12,10 +12,10 @@ export default function DesignCard({d}:{d:Design}) {
       <div className="grid grid-cols-4 gap-2 mt-5 text-xs">
         <div className="bg-gray-50 p-2 rounded-lg"><BedDouble size={16}/><b>{d.bedrooms}</b> beds</div>
         <div className="bg-gray-50 p-2 rounded-lg"><Bath size={16}/><b>{d.bathrooms}</b> baths</div>
-        <div className="bg-gray-50 p-2 rounded-lg"><Toilet size={16}/><b>{d.toilets}</b> toilets</div>
+        <div className="bg-gray-50 p-2 rounded-lg"><Toilet size={16}/><b>{d.bathrooms}</b> toilets</div>
         <div className="bg-gray-50 p-2 rounded-lg"><Maximize size={16}/><b>{d.area.split(" ")[0]}</b>m²</div>
       </div>
-      <Link href={`/designs/${d.slug}`} className="btn btn-dark w-full mt-5">View Full Design</Link>
+      <Link href={`/3d-designs/${d.slug}`} className="btn btn-dark w-full mt-5">View Full Design</Link>
     </div>
   </article>
 }

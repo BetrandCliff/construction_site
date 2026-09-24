@@ -1,0 +1,7 @@
+"use client";
+import { FormEvent, useState } from "react";
+export default function ContactForm(){
+ const [status,setStatus]=useState("");
+ async function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();const form=event.currentTarget;setStatus("Sending…");try{const response=await fetch("/api/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(new FormData(form).entries()))});setStatus(response.ok?"Message sent. We’ll be in touch soon.":"Could not send the message. Check the Supabase setup and try again.");if(response.ok)form.reset()}catch{setStatus("Could not send the message. Please try again.")}}
+ return <form onSubmit={submit} className="card p-6 md:p-8"><h2 className="text-2xl font-black">Send us a message</h2><div className="mt-6 grid gap-4 md:grid-cols-2"><input required name="name" className="input" placeholder="Full Name"/><input required type="email" name="email" className="input" placeholder="Email Address"/><input name="phone" className="input" placeholder="Phone Number"/><input name="project_type" className="input" placeholder="Project Type"/><textarea required name="message" className="input min-h-36 md:col-span-2" placeholder="Tell us about your project..."/></div><button className="btn btn-primary mt-5">Send Message</button>{status&&<p role="status" className="mt-4 text-sm text-slate-600">{status}</p>}</form>
+}
