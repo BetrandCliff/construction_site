@@ -1,4 +1,35 @@
 "use client";
-import Link from "next/link";import {Building2,Menu,X} from "lucide-react";import {usePathname} from "next/navigation";import {useState} from "react";
-const links=[["Home","/"],["Projects","/projects"],["3D Designs","/3d-designs"],["Services","/services"],["About","/about"],["Contact","/contact"]];
-export default function Navbar(){const [open,setOpen]=useState(false);const path=usePathname();if(path.startsWith("/admin"))return null;const active=(href:string)=>href==="/"?path==="/":path===href||path.startsWith(`${href}/`);return <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur"><div className="container flex h-[72px] items-center justify-between"><Link href="/" className="flex items-center gap-2 text-xl font-black"><span className="grid size-9 place-items-center rounded-lg bg-[#081a2c] text-white"><Building2 size={19}/></span>Build<span className="text-[#147ee8]">Vision</span></Link><nav className="hidden items-center gap-6 md:flex">{links.map(([l,h])=><Link key={h} href={h} aria-current={active(h)?"page":undefined} className={`relative py-2 text-sm font-bold transition-colors hover:text-[#147ee8] ${active(h)?"text-[#147ee8] after:absolute after:inset-x-0 after:-bottom-[17px] after:h-0.5 after:rounded-full after:bg-[#147ee8]":"text-slate-600"}`}>{l}</Link>)}<Link href="/booking" aria-current={active("/booking")?"page":undefined} className={`btn ${active("/booking")?"bg-[#0c6bd0] text-white":"btn-primary"}`}>Book Appointment</Link></nav><button className="p-2 md:hidden" onClick={()=>setOpen(!open)} aria-label="Toggle navigation">{open?<X/>:<Menu/>}</button></div>{open&&<nav className="border-t bg-white p-4 md:hidden"><div className="container grid gap-1">{links.map(([l,h])=><Link onClick={()=>setOpen(false)} key={h} href={h} aria-current={active(h)?"page":undefined} className={`rounded-lg px-3 py-3 font-bold ${active(h)?"bg-blue-50 text-[#147ee8]":"text-slate-700 hover:bg-slate-50"}`}>{l}</Link>)}<Link onClick={()=>setOpen(false)} href="/booking" aria-current={active("/booking")?"page":undefined} className={`btn mt-2 ${active("/booking")?"bg-[#0c6bd0] text-white":"btn-primary"}`}>Book Appointment</Link></div></nav>}</header>}
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { ArrowRight, Building2, Menu, Moon, Sun, X } from "lucide-react";
+import { useAppTheme } from "@/components/ThemeProvider";
+
+const links = [["Home", "/"], ["Projects", "/projects"], ["3D Designs", "/3d-designs"], ["Services", "/services"], ["About", "/about"], ["Contact", "/contact"]];
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const path = usePathname();
+  const { currentTheme, setTheme } = useAppTheme();
+  if (path.startsWith("/admin")) return null;
+  const active = (href: string) => href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+  const toggleTheme = () => setTheme("website", currentTheme === "dark" ? "light" : "dark");
+  const ThemeButton = ({ mobile = false }: { mobile?: boolean }) => <button type="button" onClick={toggleTheme} aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} website theme`} title="Switch website theme" className={`grid size-10 shrink-0 place-items-center rounded-full transition ${mobile ? "border border-[color:var(--brand-line)] text-[color:var(--brand-ink)]" : "text-[color:var(--brand-ink)] hover:bg-black/5"}`}>{currentTheme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}</button>;
+
+  return <header className="public-navbar sticky top-0 z-50 border-b backdrop-blur-xl">
+    <div className="public-nav-inner container flex h-[78px] items-center justify-between gap-5">
+      <Link href="/" className="public-wordmark flex shrink-0 items-center gap-3" aria-label="BuildVision home">
+        <span className="public-mark grid size-11 place-items-center rounded-xl text-white shadow-lg"><Building2 size={21}/></span>
+        <span><span className="block text-lg font-black leading-none tracking-tight">Build<span className="public-wordmark-accent">Vision</span></span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[.2em] opacity-60">Built with vision</span></span>
+      </Link>
+      <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+        {links.map(([label, href]) => <Link key={href} href={href} aria-current={active(href) ? "page" : undefined} className={`public-nav-link relative rounded-full px-3 py-2 text-[13px] font-semibold transition-colors ${active(href) ? "is-active" : ""}`}>{label}</Link>)}
+        <Link href="/booking" aria-current={active("/booking") ? "page" : undefined} className="public-cta ml-3 inline-flex items-center gap-2 rounded-full px-5 py-3 text-xs font-bold text-white transition duration-200">Plan a consultation<ArrowRight size={15}/></Link>
+        <ThemeButton/>
+      </nav>
+      <div className="flex items-center gap-2 lg:hidden"><ThemeButton mobile/><button className="public-mobile-menu grid size-10 place-items-center rounded-full" onClick={() => setOpen(!open)} aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open}>{open ? <X size={20}/> : <Menu size={20}/>}</button></div>
+    </div>
+    {open && <nav className="public-mobile-panel border-t px-5 py-4 lg:hidden" aria-label="Mobile navigation"><div className="container grid gap-1">{links.map(([label, href]) => <Link onClick={() => setOpen(false)} key={href} href={href} aria-current={active(href) ? "page" : undefined} className={`rounded-xl px-4 py-3 text-sm font-semibold ${active(href) ? "public-mobile-active" : ""}`}>{label}</Link>)}<Link onClick={() => setOpen(false)} href="/booking" className="public-cta mt-2 inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white">Plan a consultation<ArrowRight size={16}/></Link></div></nav>}
+  </header>;
+}

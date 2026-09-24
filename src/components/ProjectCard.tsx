@@ -1,3 +1,10 @@
-import Link from 'next/link';
-import {MapPin,ArrowUpRight} from 'lucide-react';
-export default function ProjectCard({project}:{project:any}){return <article className="card group"><div className="relative aspect-[4/3] overflow-hidden"><img src={project.image} alt={project.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/><span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-slate-700">{project.category}</span></div><div className="p-5"><div className="flex items-start justify-between gap-4"><div><h3 className="font-black text-lg">{project.title}</h3><p className="mt-1 flex items-center gap-1 text-xs text-slate-500"><MapPin size={13}/>{project.location}</p></div><ArrowUpRight className="text-[#147ee8]" size={18}/></div><Link href={`/projects/${project.slug}`} className="mt-5 inline-block text-sm font-black text-[#147ee8]">View Project →</Link></div></article>}
+import Link from "next/link";
+import { ArrowUpRight, MapPin } from "lucide-react";
+import type { Project } from "@/lib/data";
+
+export default function ProjectCard({ project }: { project: Project }) {
+  return <article className="public-project-card card group">
+    <Link href={`/projects/${project.slug}`} aria-label={`View ${project.title}`} className="relative block aspect-[4/3] overflow-hidden bg-[#e9e5dc]"><img src={project.image} alt={project.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"/><span className="absolute left-4 top-4 rounded-full border border-white/50 bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#34463c] backdrop-blur">{project.category}</span><span className="absolute bottom-4 right-4 grid size-10 translate-y-2 place-items-center rounded-full bg-[#a96645] text-white opacity-0 shadow-lg transition duration-300 group-hover:translate-y-0 group-hover:opacity-100"><ArrowUpRight size={18}/></span></Link>
+    <div className="p-5 md:p-6"><div className="flex items-start justify-between gap-4"><div className="min-w-0"><h3 className="truncate text-lg font-bold tracking-tight">{project.title}</h3><p className="mt-2 flex items-center gap-1.5 text-xs text-slate-500"><MapPin size={13}/>{project.location}</p></div><span className="mt-1 size-2 shrink-0 rounded-full bg-[#b87751]"/></div><div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4"><span className="text-xs text-slate-400">{project.area || "Designed for living"}</span><Link href={`/projects/${project.slug}`} className="public-card-link inline-flex items-center gap-1.5 text-xs font-bold">View project<ArrowUpRight size={14}/></Link></div></div>
+  </article>;
+}

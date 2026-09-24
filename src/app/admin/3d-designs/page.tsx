@@ -1,39 +1,12 @@
-import { Plus, Eye, Pencil } from "lucide-react";
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { getDesigns } from "@/lib/projects";
+import AdminCollection from "@/components/AdminCollection";
+
 export default async function AdminDesigns() {
-  const projects = await getDesigns();
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-500">Model library</p>
-          <h1 className="text-3xl font-black">3D Designs</h1>
-        </div>
-        <Link href="/admin/3d-designs/new" className="btn btn-primary">
-          <Plus size={17} />
-          Upload Design
-        </Link>
-      </div>
-      <div className="mt-8 grid gap-5 md:grid-cols-3">
-        {projects.slice(0, 6).map((p) => (
-          <article className="card" key={p.slug}>
-            <img
-              src={p.image}
-              className="aspect-video w-full object-cover"
-              alt=""
-            />
-            <div className="p-5">
-              <h2 className="font-black">{p.title} Concept</h2>
-              <p className="mt-1 text-xs text-slate-500">GLB • Published</p>
-              <div className="mt-4 flex gap-4 text-slate-500">
-                <Link aria-label={`View ${p.title}`} href={`/3d-designs/${p.slug}`}><Eye size={17} /></Link>
-                <Link aria-label={`Edit ${p.title}`} href={`/admin/3d-designs/${p.id}/edit`}><Pencil size={17} /></Link>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
+  const designs = await getDesigns();
+  return <div className="admin-content">
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-semibold text-[#147ee8]">Model library</p><h1 className="mt-1 text-3xl font-black tracking-tight">3D Designs</h1><p className="mt-2 text-sm text-slate-500">Manage cover art, 3D models, specifications and gallery images.</p></div><Link href="/admin/3d-designs/new" className="btn btn-primary"><Plus size={17}/>Upload design</Link></div>
+    <AdminCollection items={designs} kind="designs"/>
+  </div>;
 }

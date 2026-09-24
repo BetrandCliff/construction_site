@@ -1,5 +1,28 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-export default function Footer(){const path=usePathname();const [settings,setSettings]=useState({companyName:"BuildVision",email:"hello@buildvision.cm",phone:"+237 6XX XXX XXX",location:"Buea, Cameroon"});useEffect(()=>{fetch("/api/settings").then(r=>r.ok?r.json():null).then(data=>data&&setSettings(value=>({...value,...data}))).catch(()=>{})},[]);if(path.startsWith("/admin"))return null;return <footer className="mt-16 bg-[#081a2c] text-white"><div className="container grid gap-10 py-14 md:grid-cols-4"><div className="md:col-span-2"><div className="text-xl font-black">{settings.companyName}</div><p className="mt-4 max-w-md text-sm leading-7 text-slate-300">Construction, architecture and 3D visualization designed to turn ambitious ideas into spaces people can live and work in.</p></div><div><h3 className="font-bold">Explore</h3><div className="mt-4 grid gap-3 text-sm text-slate-300"><Link href="/projects">Projects</Link><Link href="/3d-designs">3D Designs</Link><Link href="/services">Services</Link><Link href="/about">About Us</Link></div></div><div><h3 className="font-bold">Contact</h3><div className="mt-4 grid gap-3 text-sm text-slate-300"><span>{settings.location}</span><span>{settings.phone}</span><span>{settings.email}</span><Link href="/booking" className="text-[#55a9ff]">Book a consultation →</Link></div></div></div><div className="border-t border-white/10 py-5"><div className="container text-xs text-slate-400">© {new Date().getFullYear()} {settings.companyName}. All rights reserved.</div></div></footer>}
+import { ArrowUpRight, Building2, Mail, MapPin, Phone } from "lucide-react";
+
+type SiteSettings = { companyName: string; email: string; phone: string; location: string };
+
+export default function Footer() {
+  const path = usePathname();
+  const [settings, setSettings] = useState<SiteSettings>({ companyName: "BuildVision", email: "hello@buildvision.cm", phone: "+237 6XX XXX XXX", location: "Buea, Cameroon" });
+  useEffect(() => { fetch("/api/settings").then((response) => response.ok ? response.json() : null).then((data) => data && setSettings((value) => ({ ...value, ...data }))).catch(() => {}); }, []);
+  if (path.startsWith("/admin")) return null;
+
+  return <footer className="public-footer text-white">
+    <div className="container grid gap-12 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_.7fr_1fr] lg:py-16">
+      <div>
+        <Link href="/" className="flex w-fit items-center gap-3"><span className="public-footer-mark grid size-11 place-items-center rounded-xl"><Building2 size={21}/></span><span><span className="block text-lg font-black leading-none">{settings.companyName}</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[.2em] text-white/50">Construction · Architecture · Design</span></span></Link>
+        <p className="mt-5 max-w-md text-sm leading-7 text-white/65">Thoughtful spaces, expertly built. We bring construction, architecture and 3D visualization together to move your ideas from first sketch to finished place.</p>
+        <Link href="/booking" className="public-footer-link mt-6 inline-flex items-center gap-2 text-sm font-bold">Start a conversation<ArrowUpRight size={16}/></Link>
+      </div>
+      <div><h2 className="text-xs font-bold uppercase tracking-[.16em] text-white/45">Explore</h2><nav className="mt-5 grid gap-3 text-sm text-white/75">{[["Projects", "/projects"], ["3D Designs", "/3d-designs"], ["Our services", "/services"], ["About us", "/about"], ["Contact", "/contact"]].map(([label, href]) => <Link className="public-footer-nav w-fit transition-colors" href={href} key={href}>{label}</Link>)}</nav></div>
+      <div><h2 className="text-xs font-bold uppercase tracking-[.16em] text-white/45">Get in touch</h2><div className="mt-5 grid gap-4 text-sm text-white/75"><p className="flex items-start gap-3"><MapPin size={16} className="mt-0.5 shrink-0 text-[color:var(--brand-accent)]"/>{settings.location}</p><a className="flex items-center gap-3 transition hover:text-white" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}><Phone size={16} className="text-[color:var(--brand-accent)]"/>{settings.phone}</a><a className="flex items-center gap-3 transition hover:text-white" href={`mailto:${settings.email}`}><Mail size={16} className="text-[color:var(--brand-accent)]"/>{settings.email}</a></div></div>
+    </div>
+    <div className="public-footer-bottom border-t border-white/10"><div className="container flex flex-wrap items-center justify-between gap-3 py-5 text-xs text-white/45"><span>© {new Date().getFullYear()} {settings.companyName}. All rights reserved.</span><span>Designed to build what matters.</span></div></div>
+  </footer>;
+}

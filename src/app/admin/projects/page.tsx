@@ -1,2 +1,12 @@
-import {Plus,Eye,Pencil} from 'lucide-react';import Link from 'next/link';import {getProjects} from '@/lib/projects';
-export default async function AdminProjects(){const projects=await getProjects();return <div><div className="flex items-center justify-between"><div><p className="text-sm text-slate-500">Content management</p><h1 className="text-3xl font-black">Projects</h1></div><Link href="/admin/projects/new" className="btn btn-primary"><Plus size={17}/>Add Project</Link></div><div className="card mt-8 overflow-hidden"><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-[#f4f7fb] text-xs uppercase text-slate-500"><tr><th className="p-4">Image</th><th className="p-4">Title</th><th className="p-4">Location</th><th className="p-4">Status</th><th className="p-4">Actions</th></tr></thead><tbody>{projects.map(p=><tr className="border-t" key={p.slug}><td className="p-4"><img src={p.image} className="size-12 rounded-lg object-cover" alt=""/></td><td className="p-4 font-bold">{p.title}</td><td className="p-4 text-slate-500">{p.location}</td><td className="p-4"><span className="badge">{p.status}</span></td><td className="p-4"><div className="flex gap-4 text-slate-500"><Link aria-label={`View ${p.title}`} href={`/projects/${p.slug}`}><Eye size={17}/></Link><Link aria-label={`Edit ${p.title}`} href={`/admin/projects/${p.id}/edit`}><Pencil size={17}/></Link></div></td></tr>)}</tbody></table></div></div></div>}
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { getProjects } from "@/lib/projects";
+import AdminCollection from "@/components/AdminCollection";
+
+export default async function AdminProjects() {
+  const projects = await getProjects();
+  return <div className="admin-content">
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-semibold text-[#147ee8]">Content management</p><h1 className="mt-1 text-3xl font-black tracking-tight">Projects</h1><p className="mt-2 text-sm text-slate-500">Manage project details, imagery, plans and published status.</p></div><Link href="/admin/projects/new" className="btn btn-primary"><Plus size={17}/>Add project</Link></div>
+    <AdminCollection items={projects} kind="projects"/>
+  </div>;
+}

@@ -7,6 +7,7 @@ export default function PageMotion({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname.startsWith("/admin")) return;
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
         "main section, main article, main [data-scroll-reveal]",
@@ -31,5 +32,5 @@ export default function PageMotion({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, [pathname]);
 
-  return <div key={pathname} className="page-enter">{children}</div>;
+  return <div key={pathname} className={pathname.startsWith("/admin") ? undefined : "page-enter"}>{children}</div>;
 }

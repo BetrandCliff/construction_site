@@ -4,16 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  LayoutDashboard,
-  FolderKanban,
-  Box,
-  CalendarDays,
-  Users,
-  Settings,
-  LogOut,
-  PanelLeftClose,
-  PanelLeftOpen,
+  LayoutDashboard, FolderKanban, Box, CalendarDays, Users, Settings, LogOut,
+  PanelLeftClose, PanelLeftOpen, Moon, Sun, Building2, ArrowUpRight,
 } from "lucide-react";
+import { useAppTheme } from "@/components/ThemeProvider";
 
 const links = [
   ["Dashboard", "/admin", LayoutDashboard],
@@ -27,59 +21,67 @@ const links = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { currentTheme, setTheme } = useAppTheme();
   const [collapsed, setCollapsed] = useState(false);
+  const [sidebarReady, setSidebarReady] = useState(false);
+
   useEffect(() => {
     setCollapsed(window.localStorage.getItem("admin-sidebar-collapsed") === "true");
+    setSidebarReady(true);
   }, []);
   useEffect(() => {
-    window.localStorage.setItem("admin-sidebar-collapsed", String(collapsed));
-  }, [collapsed]);
+    if (sidebarReady) window.localStorage.setItem("admin-sidebar-collapsed", String(collapsed));
+  }, [collapsed, sidebarReady]);
+
   if (pathname === "/admin/login" || pathname === "/admin/forgot-password") return <>{children}</>;
 
-  return (
-    <div className="min-h-screen bg-[#f4f7fb]">
-      <div className="flex min-h-screen">
-        <aside className={`${collapsed ? "w-[76px]" : "w-64"} shrink-0 bg-[#081a2c] p-3 text-white transition-[width] duration-200 sm:p-5`}>
-          <div className={`mb-6 flex items-center ${collapsed ? "justify-center" : "justify-between gap-2"}`}>
-            {!collapsed && <div className="text-lg font-black">Build<span className="text-[#55a9ff]">Vision</span> Admin</div>}
-            <button
-              type="button"
-              aria-label={collapsed ? "Expand sidebar" : "Minimize sidebar"}
-              title={collapsed ? "Expand sidebar" : "Minimize sidebar"}
-              onClick={() => setCollapsed((value) => !value)}
-              className="grid size-9 shrink-0 place-items-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white"
-            >
-              {collapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}
-            </button>
-          </div>
-          <nav aria-label="Admin navigation" className="grid gap-2">
-            {links.map(([title, href, Icon]) => {
-              const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
-              return (
-                <Link href={href} key={href} title={collapsed ? title : undefined} aria-label={title}
-                  className={`flex items-center ${collapsed ? "justify-center px-0" : "gap-3 px-3"} rounded-lg py-3 text-sm font-bold transition-colors hover:bg-white/10 hover:text-white ${active ? "bg-white/10 text-white" : "text-slate-300"}`}>
-                  <Icon size={18} />
-                  {!collapsed && <span>{title}</span>}
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="mt-8 border-t border-white/10 pt-5">
-            <Link href="/" title={collapsed ? "Back to website" : undefined} aria-label="Back to website"
-              className={`flex items-center ${collapsed ? "justify-center px-0" : "gap-3 px-3"} py-2 text-sm text-slate-400 hover:text-white`}>
-              <LogOut size={18} />
-              {!collapsed && <span>Back to website</span>}
+  return <div className="min-h-screen bg-[#f4f7fb]">
+    <div className="flex min-h-screen">
+      <aside className={`${collapsed ? "w-[76px]" : "w-[248px]"} sticky top-0 z-40 flex h-screen shrink-0 self-start flex-col overflow-y-auto bg-gradient-to-b from-[#071729] via-[#0b2036] to-[#081a2c] px-3 py-4 text-white shadow-xl shadow-slate-950/10 transition-[width] duration-300 ease-in-out sm:px-4`}>
+        <div className={`mb-7 flex min-h-12 items-center border-b border-white/10 pb-4 ${collapsed ? "justify-center" : "justify-between gap-2"}`}>
+          <Link href="/admin" aria-label="BuildVision admin dashboard" title={collapsed ? "BuildVision Admin" : undefined} className={`flex min-w-0 items-center ${collapsed ? "justify-center" : "gap-3"}`}>
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#55a9ff] to-[#147ee8] text-white shadow-lg shadow-blue-950/40"><Building2 size={20}/></span>
+            {!collapsed && <span className="min-w-0"><span className="block whitespace-nowrap text-sm font-black tracking-wide">Build<span className="text-[#72baff]">Vision</span></span><span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">Admin workspace</span></span>}
+          </Link>
+          {!collapsed && <button type="button" aria-label="Minimize sidebar" title="Minimize sidebar" onClick={() => setCollapsed(true)} className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white"><PanelLeftClose size={17}/></button>}
+        </div>
+        {collapsed && <button type="button" aria-label="Expand sidebar" title="Expand sidebar" onClick={() => setCollapsed(false)} className="mb-5 grid size-10 self-center place-items-center rounded-xl text-slate-300 transition hover:bg-white/10 hover:text-white"><PanelLeftOpen size={18}/></button>}
+
+        {!collapsed && <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">Workspace</p>}
+        <nav aria-label="Admin navigation" className="grid gap-1.5">
+          {links.map(([title, href, Icon]) => {
+            const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
+            return <Link href={href} key={href} title={collapsed ? title : undefined} aria-label={title} aria-current={active ? "page" : undefined}
+              className={`group relative flex min-h-11 items-center ${collapsed ? "justify-center px-0" : "gap-3 px-3"} rounded-xl text-[13px] font-semibold transition-all duration-200 ${active ? "bg-gradient-to-r from-[#147ee8]/25 to-[#147ee8]/10 text-white shadow-inner shadow-white/5" : "text-slate-400 hover:bg-white/[.07] hover:text-white"}`}>
+              {active && <span className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-[#55a9ff] shadow-[0_0_12px_rgba(85,169,255,.8)]"/>}
+              <Icon size={18} className={`shrink-0 transition-transform duration-200 ${active ? "text-[#72baff]" : "group-hover:scale-105 group-hover:text-slate-200"}`}/>
+              {!collapsed && <span className="truncate">{title}</span>}
+              {!collapsed && active && <span className="ml-auto size-1.5 rounded-full bg-[#55a9ff]"/>}
+            </Link>;
+          })}
+        </nav>
+
+        <div className="mt-auto pt-6">
+          {!collapsed && <div className="mb-4 flex items-center gap-2 rounded-xl border border-white/[.07] bg-white/[.04] px-3 py-2.5"><span className="relative flex size-2"><span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-40"/><span className="relative inline-flex size-2 rounded-full bg-emerald-400"/></span><span className="text-[11px] font-medium text-slate-300">Workspace active</span></div>}
+          <div className="border-t border-white/10 pt-3">
+            <Link href="/" title={collapsed ? "Back to website" : undefined} aria-label="Back to website" className={`group flex min-h-10 items-center ${collapsed ? "justify-center px-0" : "gap-3 px-3"} rounded-xl text-xs font-semibold text-slate-400 transition hover:bg-white/[.07] hover:text-white`}>
+              <LogOut size={17} className="shrink-0"/>{!collapsed && <><span>Back to website</span><ArrowUpRight size={14} className="ml-auto opacity-50 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"/></>}
             </Link>
           </div>
-        </aside>
-        <div className="min-w-0 flex-1">
-          <header className="flex h-16 items-center justify-between border-b bg-white px-6">
-            <span className="font-bold text-slate-700">Administration</span>
-            <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/admin/login"); }} className="text-sm font-bold text-slate-500">Sign out</button>
-          </header>
-          <main className="p-5 md:p-9">{children}</main>
         </div>
+      </aside>
+
+      <div className="min-w-0 flex-1">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-5 backdrop-blur-xl md:px-8">
+          <div><p className="text-xs font-medium text-slate-400">BuildVision / Admin</p><span className="text-sm font-bold text-slate-700">{links.find(([, href]) => href === "/admin" ? pathname === href : pathname.startsWith(href))?.[0] ?? "Administration"}</span></div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button type="button" onClick={() => setTheme("admin", currentTheme === "dark" ? "light" : "dark")} aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} admin theme`} title="Toggle admin theme" className="grid size-9 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-[#147ee8]">{currentTheme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}</button>
+            <span className="hidden h-7 w-px bg-slate-200 sm:block"/>
+            <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/admin/login"); }} className="rounded-lg px-2 py-2 text-xs font-bold text-slate-500 transition hover:bg-red-50 hover:text-red-600 sm:px-3 sm:text-sm">Sign out</button>
+          </div>
+        </header>
+        <main className="p-5 md:p-8 xl:p-9">{children}</main>
       </div>
     </div>
-  );
+  </div>;
 }

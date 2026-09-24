@@ -3,19 +3,19 @@ import { BedDouble, Bath, Toilet, Maximize } from "lucide-react";
 import type { Design } from "@/lib/data";
 
 export default function DesignCard({d}:{d:Design}) {
-  return <article className="card">
-    <img src={d.image} alt={d.title} className="w-full h-60 object-cover"/>
-    <div className="p-5">
-      <div className="flex justify-between gap-3"><span className="text-xs font-bold uppercase tracking-wider text-amber-700">{d.category}</span><span className="text-xs bg-gray-100 rounded-full px-2 py-1">{d.status}</span></div>
-      <h3 className="text-xl font-bold mt-2">{d.title}</h3>
-      <p className="muted text-sm mt-1">{d.location} · {d.area}</p>
-      <div className="grid grid-cols-4 gap-2 mt-5 text-xs">
-        <div className="bg-gray-50 p-2 rounded-lg"><BedDouble size={16}/><b>{d.bedrooms}</b> beds</div>
-        <div className="bg-gray-50 p-2 rounded-lg"><Bath size={16}/><b>{d.bathrooms}</b> baths</div>
-        <div className="bg-gray-50 p-2 rounded-lg"><Toilet size={16}/><b>{d.bathrooms}</b> toilets</div>
-        <div className="bg-gray-50 p-2 rounded-lg"><Maximize size={16}/><b>{d.area.split(" ")[0]}</b>m²</div>
+  return <article className="public-project-card card group">
+    <Link href={`/3d-designs/${d.slug}`} className="relative block h-60 overflow-hidden bg-[#e9e5dc]"><img src={d.image} alt={d.title} className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"/><span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#34463c]">{d.category} concept</span></Link>
+    <div className="p-5 md:p-6">
+      <div className="flex items-center justify-between gap-3"><span className="text-[10px] font-bold uppercase tracking-[.16em] text-[#a96645]">{d.status}</span><span className="text-xs text-slate-500">{d.location}</span></div>
+      <h3 className="mt-2 text-xl font-bold tracking-tight">{d.title}</h3>
+      <p className="mt-1 text-sm text-slate-500">{d.area || "Architectural visualization"}</p>
+      <div className="mt-5 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+        <div className="rounded-lg bg-gray-50 p-2.5"><BedDouble size={15} className="mb-1 text-[#a96645]"/><b>{d.bedrooms}</b> beds</div>
+        <div className="rounded-lg bg-gray-50 p-2.5"><Bath size={15} className="mb-1 text-[#a96645]"/><b>{d.bathrooms}</b> baths</div>
+        <div className="rounded-lg bg-gray-50 p-2.5"><Toilet size={15} className="mb-1 text-[#a96645]"/><b>{d.bathrooms}</b> toilets</div>
+        <div className="rounded-lg bg-gray-50 p-2.5"><Maximize size={15} className="mb-1 text-[#a96645]"/><b>{d.area.split(" ")[0]}</b> m²</div>
       </div>
-      <Link href={`/3d-designs/${d.slug}`} className="btn btn-dark w-full mt-5">View Full Design</Link>
+      <Link href={`/3d-designs/${d.slug}`} className="public-cta mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white transition">Explore design</Link>
     </div>
-  </article>
+  </article>;
 }
