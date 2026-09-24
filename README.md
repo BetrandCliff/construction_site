@@ -1,0 +1,751 @@
+# BuildVision Construction Website
+
+A professional construction and architecture website built with Next.js. The platform provides a public-facing website for showcasing construction projects and 3D architectural designs, together with a protected administration portal for managing projects, designs, appointments, documents, and website content.
+
+## Stack
+
+* Next.js 16.2.6 + TypeScript
+* Tailwind CSS v4
+* Lucide React
+* App Router
+* Supabase-ready
+* Supabase Storage-ready
+* React Three Fiber / Three.js-ready
+* Responsive design
+* Server-side data fetching ready
+
+---
+
+# Features
+
+## Public Website
+
+Visitors can:
+
+* View the company homepage
+* Browse construction projects
+* View detailed project information
+* Browse 3D architectural designs
+* View individual 3D design details
+* View services
+* Learn about the company
+* Contact the company
+* Book an appointment
+* Receive an appointment confirmation
+
+## Project Details
+
+Each project can contain:
+
+* Project name
+* Project description
+* Project location
+* Project category
+* Project status
+* Construction duration
+* Number of bedrooms
+* Number of bathrooms/toilets
+* Number of floors
+* Building area
+* Land size
+* Main project image
+* Project gallery
+* Floor plans
+* Architectural drawings
+* Structural drawings
+* Construction documents
+* Other project information
+
+## 3D Design Details
+
+Each architectural design can contain:
+
+* Design name
+* Description
+* Number of bedrooms
+* Number of bathrooms/toilets
+* Number of floors
+* Kitchen
+* Living room
+* Dining area
+* Parking spaces
+* Building dimensions
+* Building area
+* Land requirements
+* Estimated construction information
+* Exterior images
+* Interior images
+* Floor plans
+* Architectural drawings
+* Structural documents
+* Material specifications
+* 3D model files
+
+The 3D viewer is prepared for integration with React Three Fiber and Three.js.
+
+---
+
+# Routes
+
+## Public Routes
+
+| Route                   | Description                             |
+| ----------------------- | --------------------------------------- |
+| `/`                     | Home page                               |
+| `/projects`             | Projects listing                        |
+| `/projects/[slug]`      | Project details                         |
+| `/3d-designs`           | 3D architectural designs                |
+| `/3d-designs/[slug]`    | 3D design details                       |
+| `/services`             | Construction and architectural services |
+| `/about`                | About the company                       |
+| `/contact`              | Contact page                            |
+| `/booking`              | Appointment booking                     |
+| `/booking/confirmation` | Booking confirmation                    |
+
+---
+
+# Admin Routes
+
+The administration portal is separate from the public website.
+
+Administrators can access the portal through:
+
+`/admin/login`
+
+After successful authentication, the administrator is redirected to:
+
+`/admin`
+
+## Admin Routes
+
+| Route                         | Description                     |
+| ----------------------------- | ------------------------------- |
+| `/admin/login`                | Administrator login             |
+| `/admin/forgot-password`      | Password recovery               |
+| `/admin`                      | Admin dashboard                 |
+| `/admin/projects`             | Manage construction projects    |
+| `/admin/projects/new`         | Create a new project            |
+| `/admin/projects/[id]/edit`   | Edit an existing project        |
+| `/admin/3d-designs`           | Manage 3D architectural designs |
+| `/admin/3d-designs/new`       | Create a new 3D design          |
+| `/admin/3d-designs/[id]/edit` | Edit an existing 3D design      |
+| `/admin/appointments`         | Manage appointments             |
+| `/admin/documents`            | Manage construction documents   |
+| `/admin/messages`             | Manage contact messages         |
+| `/admin/settings`             | Administration settings         |
+
+The `/admin` section should use its own dashboard layout, sidebar, and header rather than the public website navigation.
+
+---
+
+# Folder Structure
+
+```text
+buildvision/
+│
+├── src/
+│   │
+│   ├── app/
+│   │   │
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── globals.css
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── page.tsx
+│   │   │   └── [slug]/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── 3d-designs/
+│   │   │   ├── page.tsx
+│   │   │   └── [slug]/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── services/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── about/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── contact/
+│   │   │   └── page.tsx
+│   │   │
+│   │   ├── booking/
+│   │   │   ├── page.tsx
+│   │   │   └── confirmation/
+│   │   │       └── page.tsx
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   │
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx
+│   │   │   │
+│   │   │   ├── page.tsx
+│   │   │   │
+│   │   │   ├── projects/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── new/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       └── edit/
+│   │   │   │           └── page.tsx
+│   │   │   │
+│   │   │   ├── 3d-designs/
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── new/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── [id]/
+│   │   │   │       └── edit/
+│   │   │   │           └── page.tsx
+│   │   │   │
+│   │   │   ├── appointments/
+│   │   │   │   └── page.tsx
+│   │   │   │
+│   │   │   ├── documents/
+│   │   │   │   └── page.tsx
+│   │   │   │
+│   │   │   ├── messages/
+│   │   │   │   └── page.tsx
+│   │   │   │
+│   │   │   └── settings/
+│   │   │       └── page.tsx
+│   │   │
+│   │   └── api/
+│   │       ├── projects/
+│   │       │   └── route.ts
+│   │       ├── 3d-designs/
+│   │       │   └── route.ts
+│   │       ├── appointments/
+│   │       │   └── route.ts
+│   │       └── contact/
+│   │           └── route.ts
+│   │
+│   ├── components/
+│   │   │
+│   │   ├── public/
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Hero.tsx
+│   │   │   ├── ProjectCard.tsx
+│   │   │   ├── DesignCard.tsx
+│   │   │   ├── ServiceCard.tsx
+│   │   │   ├── ContactForm.tsx
+│   │   │   └── BookingForm.tsx
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── AdminSidebar.tsx
+│   │   │   ├── AdminHeader.tsx
+│   │   │   ├── AdminLayout.tsx
+│   │   │   ├── DashboardCard.tsx
+│   │   │   ├── ProjectForm.tsx
+│   │   │   ├── DesignForm.tsx
+│   │   │   ├── AppointmentTable.tsx
+│   │   │   ├── DocumentUpload.tsx
+│   │   │   └── DataTable.tsx
+│   │   │
+│   │   ├── 3d/
+│   │   │   ├── ModelViewer.tsx
+│   │   │   └── ModelControls.tsx
+│   │   │
+│   │   └── ui/
+│   │       ├── Button.tsx
+│   │       ├── Input.tsx
+│   │       ├── Modal.tsx
+│   │       ├── Dropdown.tsx
+│   │       ├── Loading.tsx
+│   │       └── FileUpload.tsx
+│   │
+│   ├── lib/
+│   │   ├── data.ts
+│   │   ├── supabase/
+│   │   │   ├── client.ts
+│   │   │   ├── server.ts
+│   │   │   └── middleware.ts
+│   │   ├── auth.ts
+│   │   ├── storage.ts
+│   │   └── utils.ts
+│   │
+│   ├── types/
+│   │   ├── project.ts
+│   │   ├── design.ts
+│   │   ├── appointment.ts
+│   │   ├── document.ts
+│   │   ├── message.ts
+│   │   └── admin.ts
+│   │
+│   └── middleware.ts
+│
+├── public/
+│   ├── images/
+│   │   ├── hero/
+│   │   ├── projects/
+│   │   ├── designs/
+│   │   └── services/
+│   │
+│   ├── icons/
+│   └── logo/
+│
+├── .env.local
+├── .gitignore
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── tsconfig.json
+└── README.md
+```
+
+---
+
+# Folder Responsibilities
+
+## `src/app`
+
+Contains all Next.js App Router pages and API routes.
+
+Public pages are located directly under `src/app`, while administrator pages are grouped under:
+
+```text
+src/app/admin
+```
+
+This makes the application structure easier to maintain as the website grows.
+
+---
+
+## `src/components/public`
+
+Contains components used by visitors.
+
+Examples:
+
+* Navbar
+* Footer
+* Hero sections
+* Project cards
+* 3D design cards
+* Service cards
+* Contact forms
+* Booking forms
+
+---
+
+## `src/components/admin`
+
+Contains components specifically used by the administration dashboard.
+
+Examples:
+
+* Admin sidebar
+* Admin header
+* Dashboard cards
+* Project forms
+* 3D design forms
+* Appointment tables
+* Document upload components
+
+---
+
+## `src/components/3d`
+
+Contains components responsible for displaying architectural 3D models.
+
+The initial implementation can use a placeholder viewer.
+
+Later, this can be replaced with:
+
+* React Three Fiber
+* Three.js
+* `@react-three/drei`
+* GLTFLoader
+
+Supported model formats can include:
+
+* `.glb`
+* `.gltf`
+
+---
+
+## `src/lib`
+
+Contains reusable application logic and external service configuration.
+
+Examples:
+
+* Supabase clients
+* Authentication helpers
+* Storage helpers
+* Database queries
+* Utility functions
+
+---
+
+## `src/types`
+
+Contains TypeScript types and interfaces.
+
+For example:
+
+```text
+Project
+3DDesign
+Appointment
+Document
+Message
+Admin
+```
+
+Keeping these types in one location makes it easier to maintain consistent data structures across the application.
+
+---
+
+# Example Design Data
+
+A 3D architectural design can eventually follow a structure similar to:
+
+```ts
+type Design = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+
+  bedrooms: number;
+  bathrooms: number;
+  kitchens: number;
+  livingRooms: number;
+  diningRooms: number;
+  floors: number;
+  parkingSpaces: number;
+
+  buildingArea: number;
+  landSize?: number;
+
+  mainImage: string;
+  gallery: string[];
+
+  floorPlans: string[];
+  architecturalDrawings: string[];
+  structuralDrawings: string[];
+  specifications: string[];
+
+  modelUrl?: string;
+
+  createdAt: string;
+  updatedAt: string;
+};
+```
+
+---
+
+# Supabase
+
+The application is designed to connect to Supabase for:
+
+* Authentication
+* PostgreSQL database
+* Storage
+* Row Level Security
+* Admin authentication
+* Project management
+* 3D design management
+* Appointment management
+* Contact messages
+
+Recommended storage buckets:
+
+```text
+project-images
+design-images
+design-models
+construction-documents
+```
+
+---
+
+# Authentication
+
+The administrator should not access the dashboard through the normal public website navigation.
+
+The administrator goes directly to:
+
+```text
+/admin/login
+```
+
+After successful authentication:
+
+```text
+/admin
+```
+
+Unauthenticated users attempting to access:
+
+```text
+/admin
+/admin/projects
+/admin/3d-designs
+/admin/appointments
+```
+
+should be redirected to:
+
+```text
+/admin/login
+```
+
+Authentication and authorization should be handled server-side using Supabase Auth and protected middleware/routes.
+
+---
+
+# Appointment Booking
+
+The booking system should prevent double booking.
+
+The final implementation should:
+
+1. Display available appointment dates.
+2. Display available time slots.
+3. Allow a visitor to submit an appointment.
+4. Validate availability on the server.
+5. Prevent duplicate bookings.
+6. Store the appointment in Supabase.
+7. Display a confirmation page.
+8. Notify the administrator.
+9. Optionally send a confirmation email to the client.
+
+---
+
+# Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+Admin login:
+
+```text
+http://localhost:3000/admin/login
+```
+
+Admin dashboard:
+
+```text
+http://localhost:3000/admin
+```
+
+---
+
+# Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+Additional variables can be added later for:
+
+* Email provider
+* Appointment notifications
+* Storage
+* 3D model processing
+* Other external services
+
+Never expose the Supabase service-role key to the browser.
+
+---
+
+# Next Implementation Steps
+
+### 1. Connect Supabase
+
+Create the Supabase project and configure:
+
+* Database
+* Authentication
+* Storage
+* Row Level Security
+
+### 2. Create Database Tables
+
+Recommended tables:
+
+```text
+projects
+designs
+project_documents
+design_documents
+appointments
+contact_messages
+admins
+```
+
+### 3. Replace Demo Data
+
+Replace:
+
+```text
+src/lib/data.ts
+```
+
+with server-side Supabase queries.
+
+### 4. Configure Supabase Storage
+
+Create storage buckets for:
+
+```text
+project-images
+design-images
+design-models
+construction-documents
+```
+
+### 5. Implement 3D Viewer
+
+Replace the placeholder 3D preview with:
+
+* React Three Fiber
+* Three.js
+* GLTFLoader
+* GLB/GLTF model support
+
+### 6. Implement Appointment System
+
+Add:
+
+* Availability checking
+* Time slots
+* Server-side validation
+* Double-booking protection
+* Confirmation page
+* Appointment management
+
+### 7. Implement Admin Authentication
+
+Connect:
+
+```text
+/admin/login
+```
+
+to Supabase Auth.
+
+Protect all `/admin/*` routes.
+
+Implement role-based access where necessary.
+
+### 8. Implement Admin CRUD
+
+Administrators should be able to:
+
+* Create projects
+* Edit projects
+* Delete projects
+* Create 3D designs
+* Edit 3D designs
+* Delete 3D designs
+* Upload construction documents
+* Manage appointments
+* Manage contact messages
+
+### 9. Add Email Notifications
+
+Implement transactional email for:
+
+* New appointments
+* Appointment confirmations
+* Appointment updates
+* Contact form submissions
+
+### 10. Replace Demo Content
+
+Replace all demo:
+
+* Images
+* Project information
+* Design information
+* Contact details
+* Company information
+* Services
+* Appointment settings
+
+with the client's actual content.
+
+---
+
+# Production Considerations
+
+Before deploying to production:
+
+* Enable Supabase Row Level Security.
+* Protect administrator routes.
+* Validate all form submissions server-side.
+* Validate uploaded files.
+* Restrict administrator permissions.
+* Prevent unauthorized document access.
+* Prevent appointment double booking.
+* Keep service-role credentials server-side.
+* Optimize project images.
+* Optimize 3D models.
+* Add appropriate metadata and SEO.
+* Configure production environment variables.
+* Test the complete authentication flow.
+* Test the website on mobile, tablet, and desktop.
+
+---
+
+# Project Architecture
+
+The overall application is organized into three major areas:
+
+```text
+                    BUILDVISION
+                        │
+          ┌─────────────┴─────────────┐
+          │                           │
+      PUBLIC SITE                 ADMIN PORTAL
+          │                           │
+          │                       /admin/login
+          │                           │
+          │                       /admin
+          │                           │
+          ├── Projects                ├── Projects
+          ├── 3D Designs              ├── 3D Designs
+          ├── Services                ├── Appointments
+          ├── About                   ├── Documents
+          ├── Contact                 ├── Messages
+          └── Booking                 └── Settings
+                        │
+                        ▼
+                    SUPABASE
+                        │
+          ┌─────────────┼─────────────┐
+          │             │             │
+       Database       Auth          Storage
+          │             │             │
+      Projects       Admins       Images
+      Designs                     Documents
+      Bookings                    3D Models
+      Messages
+```
+
+This structure keeps the **public construction website**, **3D design system**, **appointment system**, and **admin management portal** organized while leaving room for the application to grow.
