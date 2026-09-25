@@ -5,11 +5,15 @@ import Footer from "@/components/Footer";
 import PageMotion from "@/components/PageMotion";
 import ToastProvider from "@/components/ToastProvider";
 import ThemeProvider from "@/components/ThemeProvider";
-export const metadata: Metadata = {
-  title: "BuildVision | Construction & Architectural Design",
+import { getSiteSettings } from "@/lib/settings";
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+  title: `${settings.companyName} | Construction & Architectural Design`,
   description:
     "Professional construction, architectural design and interactive 3D visualization services.",
-};
+  };
+}
 export default function RootLayout({
   children,
 }: {

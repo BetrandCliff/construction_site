@@ -21,7 +21,7 @@ export default async function About() {
               Construction with clarity from concept to completion.
             </h2>
             <p className="leading-8 text-slate-600">
-              BuildVision is a construction and architectural design business
+              {settings.companyName} is a construction and architectural design business
               focused on thoughtful planning, quality execution and modern
               visualization. Our approach combines practical construction
               knowledge with 3D design so clients can make confident decisions
