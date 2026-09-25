@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { isAdminAuthenticated, supabaseRequest } from "@/lib/supabase";
 export async function GET() {
     try {
@@ -7,7 +8,9 @@ export async function GET() {
             "site_settings",
             { query: "?id=eq.1&select=data" },
         );
-        return NextResponse.json(rows[0]?.data ?? {});
+        return NextResponse.json(rows[0]?.data ?? {}, {
+            headers: { "Cache-Control": "no-store, max-age=0" },
+        });
     } catch (error) {
         return NextResponse.json(
             {
@@ -34,16 +37,24 @@ export async function PATCH(request: Request) {
         );
     }
     try {
+        const existing = await supabaseRequest<{ data: Record<string, unknown> }[]>(
+            "site_settings",
+            { query: "?id=eq.1&select=data" },
+        );
+        const mergedData = { ...(existing[0]?.data ?? {}), ...data };
         const rows = await supabaseRequest<{ data: Record<string, unknown> }[]>(
             "site_settings",
             {
                 method: "POST",
                 query: "?on_conflict=id",
-                body: { id: 1, data, updated_at: new Date().toISOString() },
+                body: { id: 1, data: mergedData, updated_at: new Date().toISOString() },
                 prefer: "resolution=merge-duplicates,return=representation",
             },
         );
-        return NextResponse.json(rows[0]?.data ?? data);
+        revalidatePath("/", "layout");
+        return NextResponse.json(rows[0]?.data ?? mergedData, {
+            headers: { "Cache-Control": "no-store, max-age=0" },
+        });
     } catch (error) {
         return NextResponse.json(
             {

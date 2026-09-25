@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { ImagePlus, Moon, Save, Sun } from "lucide-react";
+import { ImagePlus, Moon, Save, Sun, Trash2 } from "lucide-react";
 import { uploadMedia } from "@/lib/upload-media";
 import { showToast } from "@/components/ToastProvider";
 import { ThemeMode, useAppTheme } from "@/components/ThemeProvider";
@@ -13,6 +13,11 @@ const imageFields: [keyof Pick<Settings, "homeHeroImage" | "aboutImage" | "banne
   ["aboutImage", "About page", "aboutImage_file", "Main image shown in the About section."],
   ["bannerImage", "Page banner", "bannerImage_file", "Shared banner used across inner pages."],
 ];
+const defaultImages: Record<keyof Pick<Settings, "homeHeroImage" | "aboutImage" | "bannerImage">, string> = {
+  homeHeroImage: "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=2000&q=85",
+  aboutImage: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+  bannerImage: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+};
 
 function ThemeChoice({ label, value, selected, onSelect }: { label: string; value: ThemeMode; selected: ThemeMode; onSelect: (value: ThemeMode) => void }) {
   const Icon = value === "dark" ? Moon : Sun;
@@ -81,7 +86,7 @@ export default function SettingsPage() {
 
         <section className="card admin-settings-card p-6 md:p-7">
           <div className="mb-6 flex items-start gap-3"><span className="grid size-10 place-items-center rounded-xl bg-violet-50 text-violet-600"><ImagePlus size={19}/></span><div><h2 className="text-lg font-black">Website imagery</h2><p className="mt-1 text-sm text-slate-500">Upload images to Supabase Storage for key website sections.</p></div></div>
-          <div className="grid gap-5 md:grid-cols-3">{imageFields.map(([key, label, inputName, description]) => <label key={key} className="group grid content-start gap-3 text-sm font-semibold text-slate-700"><span>{label}</span><span className="text-xs font-normal leading-5 text-slate-500">{description}</span><input name={inputName} type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" className="input text-xs"/>{values[key] ? <img src={values[key]} alt={`${label} preview`} className="h-36 w-full rounded-xl border border-slate-200 object-cover transition group-hover:shadow-md"/> : <span className="grid h-36 place-items-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">No image uploaded</span>}</label>)}</div>
+          <div className="grid gap-5 md:grid-cols-3">{imageFields.map(([key, label, inputName, description]) => <div key={key} className="group grid content-start gap-3 text-sm font-semibold text-slate-700"><span>{label}</span><span className="text-xs font-normal leading-5 text-slate-500">{description}</span><input name={inputName} type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif" className="input text-xs" onChange={(event) => { const file = event.target.files?.[0]; if (file) setValues((previous) => ({ ...previous, [key]: URL.createObjectURL(file) })); }}/><img src={values[key] || defaultImages[key]} alt={values[key] ? `${label} preview` : `${label} default preview`} className="h-36 w-full rounded-xl border border-slate-200 object-cover transition group-hover:shadow-md"/>{values[key] && <button type="button" onClick={async (event) => { const button = event.currentTarget; button.disabled = true; const card = button.closest("div.group"); const input = card?.querySelector(`input[name="${inputName}"]`) as HTMLInputElement | null; const cleared = { ...values, [key]: "" }; try { const response = await fetch("/api/settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ [key]: "" }) }); const result = await response.json(); if (!response.ok) throw new Error(result.error ?? "Could not remove image."); if (input) input.value = ""; setValues({ ...defaults, ...result, ...cleared }); setStatus(`${label} removed. The default image is now in use.`); showToast(`${label} removed. Default image restored.`); } catch (error) { const message = error instanceof Error ? error.message : "Could not remove image."; setStatus(message); showToast(message, "error"); } finally { button.disabled = false; } }} className="inline-flex w-fit items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 transition hover:bg-red-50 disabled:opacity-50"><Trash2 size={14}/>Remove image</button>}</div>)}</div>
         </section>
       </div>
 
