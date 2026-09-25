@@ -5,18 +5,18 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Building2, Mail, MapPin, Phone } from "lucide-react";
 
-type SiteSettings = { companyName: string; email: string; phone: string; location: string };
+type SiteSettings = { companyName: string; email: string; phone: string; location: string; logoImage: string };
 
 export default function Footer() {
   const path = usePathname();
-  const [settings, setSettings] = useState<SiteSettings>({ companyName: "BuildVision", email: "hello@buildvision.cm", phone: "+237 6XX XXX XXX", location: "Buea, Cameroon" });
+  const [settings, setSettings] = useState<SiteSettings>({ companyName: "BuildVision", email: "hello@buildvision.cm", phone: "+237 6XX XXX XXX", location: "Buea, Cameroon", logoImage: "" });
   useEffect(() => { fetch("/api/settings").then((response) => response.ok ? response.json() : null).then((data) => data && setSettings((value) => ({ ...value, ...data }))).catch(() => {}); }, []);
   if (path.startsWith("/admin")) return null;
 
   return <footer className="public-footer text-white">
     <div className="container grid gap-12 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_.7fr_1fr] lg:py-16">
       <div>
-        <Link href="/" className="flex w-fit items-center gap-3"><span className="public-footer-mark grid size-11 place-items-center rounded-xl"><Building2 size={21}/></span><span><span className="block text-lg font-black leading-none">{settings.companyName}</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[.2em] text-white/50">Construction · Architecture · Design</span></span></Link>
+        <Link href="/" aria-label={`${settings.companyName} home`} className="flex w-fit items-center gap-3">{settings.logoImage ? <img src={settings.logoImage} alt={`${settings.companyName} logo`} className="size-11 shrink-0 rounded-xl bg-white object-contain p-1"/> : <span className="public-footer-mark grid size-11 place-items-center rounded-xl"><Building2 size={21}/></span>}<span><span className="block text-lg font-black leading-none">{settings.companyName}</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[.2em] text-white/50">Construction · Architecture · Design</span></span></Link>
         <p className="mt-5 max-w-md text-sm leading-7 text-white/65">Thoughtful spaces, expertly built. We bring construction, architecture and 3D visualization together to move your ideas from first sketch to finished place.</p>
         <Link href="/booking" className="public-footer-link mt-6 inline-flex items-center gap-2 text-sm font-bold">Start a conversation<ArrowUpRight size={16}/></Link>
       </div>

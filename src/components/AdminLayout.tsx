@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-30 flex min-h-16 flex-col justify-center gap-3 border-b border-slate-200 bg-white/95 px-3 py-3 backdrop-blur-xl sm:px-5 md:h-16 md:flex-row md:items-center md:justify-between md:px-8">
-          <div className="flex items-center justify-between gap-3"><div className="min-w-0"><p className="hidden text-xs font-medium text-slate-400 sm:block">BuildVision / Admin</p><span className="text-sm font-bold text-slate-700">{links.find(([, href]) => href === "/admin" ? pathname === href : pathname.startsWith(href))?.[0] ?? "Administration"}</span></div>
+          <div className="flex w-full items-center justify-between gap-3"><div className="min-w-0"><p className="hidden text-xs font-medium text-slate-400 sm:block">BuildVision / Admin</p><span className="text-sm font-bold text-slate-700">{links.find(([, href]) => href === "/admin" ? pathname === href : pathname.startsWith(href))?.[0] ?? "Administration"}</span></div>
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <button type="button" onClick={() => setTheme("admin", currentTheme === "dark" ? "light" : "dark")} aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} admin theme`} title="Toggle admin theme" className="grid size-9 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-[#147ee8]">{currentTheme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}</button>
             <span className="hidden h-7 w-px bg-slate-200 sm:block"/>

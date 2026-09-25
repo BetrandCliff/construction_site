@@ -11,6 +11,7 @@ const links = [["Home", "/"], ["Projects", "/projects"], ["3D Designs", "/3d-des
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [companyName, setCompanyName] = useState("BuildVision");
+  const [logoImage, setLogoImage] = useState("");
   const path = usePathname();
   const { currentTheme, setTheme } = useAppTheme();
   if (path.startsWith("/admin")) return null;
@@ -18,7 +19,7 @@ export default function Navbar() {
   const toggleTheme = () => setTheme("website", currentTheme === "dark" ? "light" : "dark");
   useEffect(() => {
     fetch("/api/settings").then((response) => response.ok ? response.json() : null)
-      .then((settings) => { if (settings?.companyName) setCompanyName(settings.companyName); })
+      .then((settings) => { if (settings?.companyName) setCompanyName(settings.companyName); if (settings?.logoImage) setLogoImage(settings.logoImage); })
       .catch(() => {});
   }, []);
   const ThemeButton = ({ mobile = false }: { mobile?: boolean }) => <button type="button" onClick={toggleTheme} aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} website theme`} title="Switch website theme" className={`grid size-10 shrink-0 place-items-center rounded-full transition ${mobile ? "border border-[color:var(--brand-line)] text-[color:var(--brand-ink)]" : "text-[color:var(--brand-ink)] hover:bg-black/5"}`}>{currentTheme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}</button>;
@@ -26,7 +27,7 @@ export default function Navbar() {
   return <header className="public-navbar sticky top-0 z-50 border-b backdrop-blur-xl">
     <div className="public-nav-inner container flex h-[78px] items-center justify-between gap-5">
       <Link href="/" className="public-wordmark flex shrink-0 items-center gap-3" aria-label={`${companyName} home`}>
-        <span className="public-mark grid size-11 place-items-center rounded-xl text-white shadow-lg"><Building2 size={21}/></span>
+        {logoImage ? <img src={logoImage} alt={`${companyName} logo`} className="size-11 shrink-0 rounded-xl object-contain"/> : <span className="public-mark grid size-11 place-items-center rounded-xl text-white shadow-lg"><Building2 size={21}/></span>}
         <span><span className="block text-lg font-black leading-none tracking-tight">{companyName}</span><span className="mt-1 block text-[9px] font-bold uppercase tracking-[.2em] opacity-60">Built with vision</span></span>
       </Link>
       <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
