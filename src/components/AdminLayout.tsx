@@ -36,8 +36,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (pathname === "/admin/login" || pathname === "/admin/forgot-password") return <>{children}</>;
 
   return <div className="min-h-screen bg-[#f4f7fb]">
-    <div className="flex min-h-screen">
-      <aside className={`${collapsed ? "w-[76px]" : "w-[248px]"} sticky top-0 z-40 flex h-screen shrink-0 self-start flex-col overflow-y-auto bg-gradient-to-b from-[#071729] via-[#0b2036] to-[#081a2c] px-3 py-4 text-white shadow-xl shadow-slate-950/10 transition-[width] duration-300 ease-in-out sm:px-4`}>
+    <div className="flex min-h-screen flex-col md:flex-row">
+      <aside className={`${collapsed ? "w-[76px]" : "w-[248px]"} sticky top-0 z-40 hidden h-screen shrink-0 self-start flex-col overflow-y-auto bg-gradient-to-b from-[#071729] via-[#0b2036] to-[#081a2c] px-3 py-4 text-white shadow-xl shadow-slate-950/10 transition-[width] duration-300 ease-in-out sm:px-4 md:flex`}>
         <div className={`mb-7 flex min-h-12 items-center border-b border-white/10 pb-4 ${collapsed ? "justify-center" : "justify-between gap-2"}`}>
           <Link href="/admin" aria-label="BuildVision admin dashboard" title={collapsed ? "BuildVision Admin" : undefined} className={`flex min-w-0 items-center ${collapsed ? "justify-center" : "gap-3"}`}>
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#55a9ff] to-[#147ee8] text-white shadow-lg shadow-blue-950/40"><Building2 size={20}/></span>
@@ -72,15 +72,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-5 backdrop-blur-xl md:px-8">
-          <div><p className="text-xs font-medium text-slate-400">BuildVision / Admin</p><span className="text-sm font-bold text-slate-700">{links.find(([, href]) => href === "/admin" ? pathname === href : pathname.startsWith(href))?.[0] ?? "Administration"}</span></div>
-          <div className="flex items-center gap-2 sm:gap-3">
+        <header className="sticky top-0 z-30 flex min-h-16 flex-col justify-center gap-3 border-b border-slate-200 bg-white/95 px-3 py-3 backdrop-blur-xl sm:px-5 md:h-16 md:flex-row md:items-center md:justify-between md:px-8">
+          <div className="flex items-center justify-between gap-3"><div className="min-w-0"><p className="hidden text-xs font-medium text-slate-400 sm:block">BuildVision / Admin</p><span className="text-sm font-bold text-slate-700">{links.find(([, href]) => href === "/admin" ? pathname === href : pathname.startsWith(href))?.[0] ?? "Administration"}</span></div>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <button type="button" onClick={() => setTheme("admin", currentTheme === "dark" ? "light" : "dark")} aria-label={`Switch to ${currentTheme === "dark" ? "light" : "dark"} admin theme`} title="Toggle admin theme" className="grid size-9 place-items-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-[#147ee8]">{currentTheme === "dark" ? <Sun size={18}/> : <Moon size={18}/>}</button>
             <span className="hidden h-7 w-px bg-slate-200 sm:block"/>
             <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.assign("/admin/login"); }} className="rounded-lg px-2 py-2 text-xs font-bold text-slate-500 transition hover:bg-red-50 hover:text-red-600 sm:px-3 sm:text-sm">Sign out</button>
-          </div>
+          </div></div>
+          <nav aria-label="Admin navigation" className="-mx-3 flex gap-1 overflow-x-auto px-3 pb-0.5 md:hidden">
+            {links.map(([title, href, Icon]) => {
+              const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
+              return <Link href={href} key={href} aria-current={active ? "page" : undefined} className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg px-3 text-xs font-semibold ${active ? "bg-blue-50 text-[#147ee8]" : "text-slate-500 hover:bg-slate-50"}`}><Icon size={15}/>{title}</Link>;
+            })}
+          </nav>
         </header>
-        <main className="p-5 md:p-8 xl:p-9">{children}</main>
+        <main className="min-w-0 p-3 sm:p-5 md:p-8 xl:p-9">{children}</main>
       </div>
     </div>
   </div>;
